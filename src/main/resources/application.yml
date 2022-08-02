@@ -12,3 +12,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
+
+custom:
+  property: "ma prop custom"
+  other: "thing"
+  number: 3
+  list:
+    - 1
+    - 2
+    - 3

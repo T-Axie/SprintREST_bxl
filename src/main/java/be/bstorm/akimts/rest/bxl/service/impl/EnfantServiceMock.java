@@ -7,10 +7,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 //@Service
+// Mockito peut permettre de ne pas avoir à implementer de Mock
+// par soit même
 public class EnfantServiceMock implements EnfantService {
     @Override
-    public Enfant save(Enfant T) {
-        return new Enfant();
+    public Enfant create(Enfant toInsert) {
+        return null;
+    }
+
+    @Override
+    public Enfant update(Long id, Enfant toUpdate) {
+        return null;
     }
 
     @Override

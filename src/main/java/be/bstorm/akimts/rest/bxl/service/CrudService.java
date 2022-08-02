@@ -4,8 +4,11 @@ import java.util.List;
 
 public interface CrudService<T, TID> {
 
-    // CREATE / UPDATE
-    T save(T T);
+    // CREATE
+    T create(T toInsert);
+
+    // UPDATE
+    T update(TID id, T toUpdate);
 
     // READ
     T getOne(TID id);

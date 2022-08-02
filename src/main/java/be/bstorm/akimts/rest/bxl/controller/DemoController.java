@@ -79,7 +79,7 @@ public class DemoController {
         HttpStatus status = HttpStatus.OK;
 
 //        return new ResponseEntity<>(body, headers, status);
-        return ResponseEntity.status(status)
+        return ResponseEntity.status(HttpStatus.OK)
                 .header("arbitrary", "1e valeur", "2e valeur")
                 .headers( headers )
                 .body(body);
