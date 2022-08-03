@@ -5,6 +5,7 @@ import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,9 +15,9 @@ public class EnfantUpdateForm {
     private String nom;
     private String prenom;
     private LocalDate dateNaiss;
-    private boolean propre;
+    private boolean propre = true;
     private List<String> allergies;
-    private Set<Long> tuteursId;
+    private Set<Long> tuteursId = new HashSet<>();
 
     // 2e manière d'envisager le mappage
     // A remarque que l'id et les tuteurs ne sont pas setté

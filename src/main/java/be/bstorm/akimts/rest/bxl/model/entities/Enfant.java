@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class Enfant extends Personne {
             joinColumns = @JoinColumn(name = "enfant_id"),
             inverseJoinColumns = @JoinColumn(name = "tuteur_id")
     )
-    private Set<Tuteur> tuteurs;
+    private Set<Tuteur> tuteurs = new HashSet<>();
 
     public Enfant(String prenom, String nom, LocalDate dateNaissance, boolean propre) {
         super(prenom, nom);

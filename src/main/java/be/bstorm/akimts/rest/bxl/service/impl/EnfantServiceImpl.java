@@ -56,10 +56,8 @@ public class EnfantServiceImpl implements EnfantService {
     }
 
     @Override
-    public Enfant delete(Long id) {
+    public void delete(Long id) {
         Enfant enfant = getOne(id);
         repository.delete(enfant);
-        enfant.setId(0L);
-        return enfant;
     }
 }

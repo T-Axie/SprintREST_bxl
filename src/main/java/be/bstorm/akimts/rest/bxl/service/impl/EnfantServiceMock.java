@@ -31,10 +31,6 @@ public class EnfantServiceMock implements EnfantService {
     }
 
     @Override
-    public Enfant delete(Long id) {
-        if(id == 5)
-            return null;
-
-        return new Enfant();
+    public void delete(Long id) {
     }
 }
