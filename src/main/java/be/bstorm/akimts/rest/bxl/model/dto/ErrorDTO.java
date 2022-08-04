@@ -20,13 +20,13 @@ public class ErrorDTO {
     private int status;
     private Map<String, Object> infos;
 
-    public ErrorDTO(LocalDateTime receivedAt, HttpMethod method, String path, String message, int status) {
+    private ErrorDTO(LocalDateTime receivedAt, HttpMethod method, String path, String message, int status, Map<String, Object> infos) {
         this.receivedAt = receivedAt;
         this.method = method;
         this.path = path;
         this.message = message;
         this.status = status;
-        infos = new HashMap<>();
+        this.infos = infos == null ? new HashMap<>() : infos;
     }
 
     public ErrorDTO addInfo(String key, Object value ){
