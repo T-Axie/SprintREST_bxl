@@ -1,5 +1,6 @@
 package be.bstorm.akimts.rest.bxl.service.impl;
 
+import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
 import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.repository.EnfantRepository;
 import be.bstorm.akimts.rest.bxl.service.EnfantService;
@@ -35,11 +36,9 @@ public class EnfantServiceImpl implements EnfantService {
             throw new IllegalArgumentException("params cannot be null");
 
         if( !repository.existsById(id) )
-            throw new EntityNotFoundException();
+            throw new ElementNotFoundException(Enfant.class, id);
 
         toUpdate.setId(id);
-
-        // TODO gérer les tuteurs
 
         return repository.save(toUpdate);
     }
@@ -47,7 +46,7 @@ public class EnfantServiceImpl implements EnfantService {
     @Override
     public Enfant getOne(Long id) {
         return repository.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new ElementNotFoundException(Enfant.class, id));
     }
 
     @Override

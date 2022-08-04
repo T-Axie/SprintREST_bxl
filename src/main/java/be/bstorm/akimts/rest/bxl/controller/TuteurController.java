@@ -60,19 +60,6 @@ public class TuteurController {
 
     }
 
-    @ExceptionHandler(ElementNotFoundException.class)
-    public ResponseEntity<?> handleException(ElementNotFoundException ex, HttpServletRequest req){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(
-                        ErrorDTO.builder()
-                                .message(ex.getMessage())
-                                .receivedAt( LocalDateTime.now() )
-                                .status( HttpStatus.NOT_FOUND )
-                                .method( HttpMethod.resolve(req.getMethod()) )
-                                .path( req.getRequestURL().toString() )
-                                .build()
-                );
-    }
 
 
 }
