@@ -51,7 +51,7 @@ public class EnfantServiceImpl implements EnfantService {
         Enfant enfant = mapper.toEntity(toUpdate);
         List<Tuteur> tuteurs = tuteurRepository.findAllById(toUpdate.getTuteursId());
         enfant.setTuteurs( new HashSet<>(tuteurs) );
-        enfant.setId(id); // TODO Parler de cette modif
+        enfant.setId(id);
 
         return mapper.toDto( repository.save( enfant ) );
     }
@@ -88,7 +88,6 @@ public class EnfantServiceImpl implements EnfantService {
 
         List<Tuteur> tuteurs = tuteurRepository.findAllById(idTuteurs);
 
-        // TODO show impl
         if( tuteurs.size() < idTuteurs.size() ){
             List<Long> found = tuteurs.stream()
                     .map(Tuteur::getId)

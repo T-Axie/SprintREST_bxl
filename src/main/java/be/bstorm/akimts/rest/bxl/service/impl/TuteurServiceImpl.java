@@ -4,11 +4,13 @@ import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
 import be.bstorm.akimts.rest.bxl.exceptions.ReferencedSuppresionException;
 import be.bstorm.akimts.rest.bxl.mapper.TuteurMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.TuteurDTO;
+import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.model.entities.Personne;
 import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
 import be.bstorm.akimts.rest.bxl.model.forms.TuteurForm;
 import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.TuteurService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -41,7 +43,6 @@ public class TuteurServiceImpl implements TuteurService {
 
     @Override
     public TuteurDTO getOne(Long id) {
-
         Tuteur tuteur = repository.findById(id)
                 .orElseThrow( () -> new ElementNotFoundException(Tuteur.class, id));
 
@@ -60,14 +61,27 @@ public class TuteurServiceImpl implements TuteurService {
         Tuteur tuteur = repository.findById(id)
                 .orElseThrow( () -> new ElementNotFoundException(Tuteur.class, id));
 
-        if( tuteur.getEnfants() != null && !tuteur.getEnfants().isEmpty() )
+        // Choix 1
+//        if( tuteur.getEnfants() != null && !tuteur.getEnfants().isEmpty() )
+//            throw new ReferencedSuppresionException(
+//                    tuteur.getEnfants().stream()
+//                            .map(Personne::getId)
+//                            .collect(Collectors.toSet())
+//            );
+
+        // Choix 2
+        try {
+            repository.delete(tuteur);
+        }
+        catch (DataIntegrityViolationException ex){
             throw new ReferencedSuppresionException(
+                    Enfant.class,
                     tuteur.getEnfants().stream()
                             .map(Personne::getId)
-                            .collect(Collectors.toSet())
+                            .collect(Collectors.toSet()),
+                    ex
             );
-
-        repository.delete(tuteur);
+        }
         tuteur.setId(null);
         return mapper.toDto( tuteur );
     }

@@ -18,7 +18,7 @@ public class Enfant extends Personne {
     private LocalDate dateNaissance;
     private boolean propre;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     private List<String> allergies;
 
     @ManyToMany
