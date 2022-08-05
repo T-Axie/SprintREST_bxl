@@ -12,7 +12,7 @@ import java.util.Set;
 @Builder
 public class EnfantDTO {
 
-    private long id;
+    private Long id;
     private String nom;
     private String prenom;
     private LocalDate dateNaiss;

@@ -31,33 +31,28 @@ public class TuteurController {
     // GET http://localhost:8080/tuteur/{id}
     @GetMapping("/{id:[0-9]+}")
     public TuteurDTO getOne(@PathVariable long id){
-        return mapper.toDto( service.getOne(id) );
+        return service.getOne(id);
     }
 
     @GetMapping({"", "/all"})
     public List<TuteurDTO> getAll(){
-        return service.getAll().stream()
-                .map( mapper::toDto )
-                .toList();
+        return service.getAll();
     }
 
     @PostMapping
     public TuteurDTO insert(@RequestBody TuteurForm form){
-        return mapper.toDto( service.create( mapper.toEntity(form) ) );
+        return service.create(form);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void delete(@PathVariable long id){
-        service.delete(id);
+    public TuteurDTO delete(@PathVariable long id){
+        return service.delete(id);
     }
 
     @PutMapping("/{id}")
     public TuteurDTO update(@PathVariable long id, @RequestBody TuteurForm form ){
-
-        Tuteur entity = mapper.toEntity(form);
-        return mapper.toDto( service.update( id, entity ) );
-
+        return service.update(id, form);
     }
 
 

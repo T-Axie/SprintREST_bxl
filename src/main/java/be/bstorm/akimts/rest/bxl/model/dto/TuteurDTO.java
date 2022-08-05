@@ -11,7 +11,7 @@ import java.util.Set;
 @Data
 @Builder
 public class TuteurDTO {
-    private long id;
+    private Long id;
     private String prenom;
     private String nom;
     private String adresse;
@@ -21,7 +21,7 @@ public class TuteurDTO {
     @Data
     @Builder
     public static class EnfantDTO {
-        private long id;
+        private Long id;
         private String nom;
         private String prenom;
         private LocalDate dateNaiss;

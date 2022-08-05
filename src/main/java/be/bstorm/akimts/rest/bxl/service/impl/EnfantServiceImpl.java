@@ -1,6 +1,7 @@
 package be.bstorm.akimts.rest.bxl.service.impl;
 
 import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
+import be.bstorm.akimts.rest.bxl.exceptions.InvalidReferenceException;
 import be.bstorm.akimts.rest.bxl.mapper.EnfantMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.EnfantDTO;
 import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
@@ -11,6 +12,7 @@ import be.bstorm.akimts.rest.bxl.repository.EnfantRepository;
 import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.EnfantService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -49,6 +51,7 @@ public class EnfantServiceImpl implements EnfantService {
         Enfant enfant = mapper.toEntity(toUpdate);
         List<Tuteur> tuteurs = tuteurRepository.findAllById(toUpdate.getTuteursId());
         enfant.setTuteurs( new HashSet<>(tuteurs) );
+        enfant.setId(id); // TODO Parler de cette modif
 
         return mapper.toDto( repository.save( enfant ) );
     }
@@ -68,6 +71,7 @@ public class EnfantServiceImpl implements EnfantService {
     }
 
     @Override
+    @Transactional
     public EnfantDTO delete(Long id) {
         Enfant enfant = repository.findById(id)
                         .orElseThrow(() -> new ElementNotFoundException(Enfant.class, id));
@@ -77,14 +81,24 @@ public class EnfantServiceImpl implements EnfantService {
     }
 
     @Override
-    public EnfantDTO changeTuteurs(long id, Collection<Long> idTuteur) {
+    public EnfantDTO changeTuteurs(long id, Collection<Long> idTuteurs) {
 
         Enfant enfant = repository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException(Enfant.class, id));
 
-        List<Tuteur> tuteurs = tuteurRepository.findAllById(idTuteur);
+        List<Tuteur> tuteurs = tuteurRepository.findAllById(idTuteurs);
 
-        // TODO check id tuteurs
+        // TODO show impl
+        if( tuteurs.size() < idTuteurs.size() ){
+            List<Long> found = tuteurs.stream()
+                    .map(Tuteur::getId)
+                    .toList();
+            List<Long> notFound = idTuteurs.stream()
+                    .filter( ident -> !found.contains(ident) )
+                    .toList();
+
+            throw new InvalidReferenceException(notFound);
+        }
 
         enfant.setTuteurs( new HashSet<>(tuteurs) );
         return mapper.toDto( repository.save(enfant) );

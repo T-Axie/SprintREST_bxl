@@ -1,19 +1,17 @@
 package be.bstorm.akimts.rest.bxl.service.impl;
 
 import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
-import be.bstorm.akimts.rest.bxl.exceptions.InvalidReferenceException;
 import be.bstorm.akimts.rest.bxl.exceptions.ReferencedSuppresionException;
+import be.bstorm.akimts.rest.bxl.mapper.TuteurMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.TuteurDTO;
-import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.model.entities.Personne;
 import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
+import be.bstorm.akimts.rest.bxl.model.forms.TuteurForm;
 import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.TuteurService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,82 +20,62 @@ import java.util.stream.Collectors;
 public class TuteurServiceImpl implements TuteurService {
 
     private final TuteurRepository repository;
+    private final TuteurMapper mapper;
 
-    public TuteurServiceImpl(TuteurRepository repository) {
+    public TuteurServiceImpl(TuteurRepository repository, TuteurMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     @Override
-    public TuteurDTO create(Tuteur toInsert) {
-        if( toInsert == null )
-            throw new IllegalArgumentException("parameter 0 cannot be null");
-
-        toInsert.setId(null);
-        return repository.save(toInsert);
+    public TuteurDTO create(TuteurForm toInsert) {
+        return mapper.toDto( repository.save( mapper.toEntity(toInsert) ) );
     }
 
     @Override
-    public Tuteur update(Long id, Tuteur toUpdate) {
-        if( toUpdate == null || id == null )
-            throw new IllegalArgumentException("parameters cannot be null");
-
-        if( !repository.existsById(id) )
-            throw new ElementNotFoundException(Tuteur.class, id);
-
-        toUpdate.setId(id);
-        return repository.save( toUpdate );
+    public TuteurDTO update(Long id, TuteurForm toUpdate) {
+        Tuteur tuteur = mapper.toEntity(toUpdate);
+        tuteur.setId(id);
+        return mapper.toDto( repository.save(tuteur) );
     }
 
     @Override
-    public Tuteur getOne(Long id) {
-        if( id == null )
-            throw new IllegalArgumentException("id cannot be null");
+    public TuteurDTO getOne(Long id) {
 
-        return repository.findById(id)
-                .orElseThrow( () -> new ElementNotFoundException(Tuteur.class, id) );
+        Tuteur tuteur = repository.findById(id)
+                .orElseThrow( () -> new ElementNotFoundException(Tuteur.class, id));
+
+        return mapper.toDto( tuteur );
     }
 
     @Override
-    public List<Tuteur> getAll() {
-        return repository.findAll();
+    public List<TuteurDTO> getAll() {
+        return repository.findAll().stream()
+                .map( mapper::toDto )
+                .toList();
     }
 
     @Override
-    public void delete(Long id) {
-        if( id == null )
-            throw new IllegalArgumentException("id cannot be null");
+    public TuteurDTO delete(Long id) {
+        Tuteur tuteur = repository.findById(id)
+                .orElseThrow( () -> new ElementNotFoundException(Tuteur.class, id));
 
-        Tuteur toDelete = getOne(id);
-
-        try{
-            repository.delete(toDelete);
-        }
-        catch (DataIntegrityViolationException ex){
+        if( tuteur.getEnfants() != null && !tuteur.getEnfants().isEmpty() )
             throw new ReferencedSuppresionException(
-                    toDelete.getEnfants().stream()
-                            .map( Enfant::getId )
-                            .collect(Collectors.toUnmodifiableSet())
+                    tuteur.getEnfants().stream()
+                            .map(Personne::getId)
+                            .collect(Collectors.toSet())
             );
-        }
 
+        repository.delete(tuteur);
+        tuteur.setId(null);
+        return mapper.toDto( tuteur );
     }
 
     @Override
-    public Set<Tuteur> getAllById(Collection<Long> ids) {
-        List<Tuteur> tuteurs =  repository.findAllById(ids);
-
-        if( tuteurs.size() < ids.size() ) {
-
-            List<Long> found = tuteurs.stream()
-                    .map(Personne::getId)
-                    .toList();
-
-            List<Long> notFound = ids.stream()
-                    .filter( id -> !found.contains(id))
-                    .toList();
-
-            throw new InvalidReferenceException(notFound);
-        }
-        return new HashSet<>(tuteurs);
+    public Set<TuteurDTO> getAllById(Collection<Long> ids) {
+        return repository.findAllById(ids).stream()
+                .map( mapper::toDto )
+                .collect(Collectors.toSet());
     }
 }
