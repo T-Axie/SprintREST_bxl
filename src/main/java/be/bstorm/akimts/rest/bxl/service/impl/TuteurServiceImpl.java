@@ -1,9 +1,15 @@
 package be.bstorm.akimts.rest.bxl.service.impl;
 
 import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
+import be.bstorm.akimts.rest.bxl.exceptions.InvalidReferenceException;
+import be.bstorm.akimts.rest.bxl.exceptions.ReferencedSuppresionException;
+import be.bstorm.akimts.rest.bxl.model.dto.TuteurDTO;
+import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
+import be.bstorm.akimts.rest.bxl.model.entities.Personne;
 import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
 import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.TuteurService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -22,7 +28,7 @@ public class TuteurServiceImpl implements TuteurService {
     }
 
     @Override
-    public Tuteur create(Tuteur toInsert) {
+    public TuteurDTO create(Tuteur toInsert) {
         if( toInsert == null )
             throw new IllegalArgumentException("parameter 0 cannot be null");
 
@@ -61,14 +67,37 @@ public class TuteurServiceImpl implements TuteurService {
         if( id == null )
             throw new IllegalArgumentException("id cannot be null");
 
-        if( !repository.existsById(id) )
-            throw new ElementNotFoundException(Tuteur.class, id);
+        Tuteur toDelete = getOne(id);
 
-        repository.deleteById(id);
+        try{
+            repository.delete(toDelete);
+        }
+        catch (DataIntegrityViolationException ex){
+            throw new ReferencedSuppresionException(
+                    toDelete.getEnfants().stream()
+                            .map( Enfant::getId )
+                            .collect(Collectors.toUnmodifiableSet())
+            );
+        }
+
     }
 
     @Override
     public Set<Tuteur> getAllById(Collection<Long> ids) {
-        return new HashSet<>( repository.findAllById(ids) );
+        List<Tuteur> tuteurs =  repository.findAllById(ids);
+
+        if( tuteurs.size() < ids.size() ) {
+
+            List<Long> found = tuteurs.stream()
+                    .map(Personne::getId)
+                    .toList();
+
+            List<Long> notFound = ids.stream()
+                    .filter( id -> !found.contains(id))
+                    .toList();
+
+            throw new InvalidReferenceException(notFound);
+        }
+        return new HashSet<>(tuteurs);
     }
 }

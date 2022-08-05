@@ -2,19 +2,19 @@ package be.bstorm.akimts.rest.bxl.service;
 
 import java.util.List;
 
-public interface CrudService<T, TID> {
+public interface CrudService<T, TID, TIFORM, TUFORM> {
 
     // CREATE
-    T create(T toInsert);
+    T create(TIFORM toInsert);
 
     // UPDATE
-    T update(TID id, T toUpdate);
+    T update(TID id, TUFORM toUpdate);
 
     // READ
     T getOne(TID id);
     List<T> getAll();
 
     // DELETE
-    void delete(TID id);
+    T delete(TID id);
     
 }

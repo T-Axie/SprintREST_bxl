@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -36,41 +37,33 @@ public class EnfantController {
 
     @GetMapping("/{id:[0-9]+}")
     public EnfantDTO getOne(@PathVariable long id){
-        return mapper.toDto( service.getOne(id) );
+        return service.getOne(id);
     }
 
     @GetMapping({"", "/all"})
     public List<EnfantDTO> getAll(){
-        return service.getAll().stream()
-                .map( mapper::toDto )
-                .toList();
+        return service.getAll();
     }
 
     @PostMapping
     public EnfantDTO insert(@RequestBody EnfantInsertForm form){
-        Enfant entity = mapper.toEntity(form);
-        entity = service.create( entity );
-        return mapper.toDto( entity );
+        return service.create(form);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:[0-9]+}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void delete(@PathVariable long id){
-        service.delete(id);
+    public EnfantDTO delete(@PathVariable long id){
+        return service.delete(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id:[0-9]+}")
     public EnfantDTO update(@PathVariable long id, @RequestBody EnfantUpdateForm form ){
+        return service.update(id, form);
+    }
 
-        Enfant entity = mapper.toEntity(form);
-
-        Set<Tuteur> tuteurs = null;
-        if( form.getTuteursId() != null && !form.getTuteursId().isEmpty() )
-            tuteurs = tuteurService.getAllById( form.getTuteursId() );
-
-        entity.setTuteurs( tuteurs );
-        return mapper.toDto( service.update( id, entity ) );
-
+    @PatchMapping("/{id:[0-9]+}")
+    public EnfantDTO patchTuteurs(@PathVariable long id, @RequestBody Collection<Long> tuteurIds){
+        return service.changeTuteurs(id, tuteurIds);
     }
 
 

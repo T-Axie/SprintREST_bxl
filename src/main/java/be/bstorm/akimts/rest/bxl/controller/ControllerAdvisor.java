@@ -1,6 +1,8 @@
 package be.bstorm.akimts.rest.bxl.controller;
 
 import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
+import be.bstorm.akimts.rest.bxl.exceptions.InvalidReferenceException;
+import be.bstorm.akimts.rest.bxl.exceptions.ReferencedSuppresionException;
 import be.bstorm.akimts.rest.bxl.model.dto.ErrorDTO;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,36 @@ public class ControllerAdvisor {
                                 .method( HttpMethod.resolve(req.getMethod()) )
                                 .path( req.getRequestURL().toString() )
                                 .build()
+                );
+    }
+
+    @ExceptionHandler(ReferencedSuppresionException.class)
+    public ResponseEntity<ErrorDTO> handleException( ReferencedSuppresionException ex, HttpServletRequest req ){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ErrorDTO.builder()
+                                .message(ex.getMessage())
+                                .receivedAt( LocalDateTime.now() )
+                                .status( 400 )
+                                .method( HttpMethod.resolve(req.getMethod()) )
+                                .path( req.getRequestURL().toString() )
+                                .build()
+                );
+    }
+
+
+    @ExceptionHandler(InvalidReferenceException.class)
+    public ResponseEntity<ErrorDTO> handleException(InvalidReferenceException ex, HttpServletRequest req){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(
+                        ErrorDTO.builder()
+                                .message(ex.getMessage())
+                                .receivedAt( LocalDateTime.now() )
+                                .status( 422 )
+                                .method( HttpMethod.resolve(req.getMethod()) )
+                                .path( req.getRequestURL().toString() )
+                                .build()
+                                .addInfo("invalidReferences", ex.getNotFound())
                 );
     }
 
