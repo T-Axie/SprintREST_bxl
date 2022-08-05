@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +47,7 @@ public class EnfantController {
     }
 
     @PostMapping
-    public EnfantDTO insert(@RequestBody EnfantInsertForm form){
+    public EnfantDTO insert(@Valid @RequestBody EnfantInsertForm form){
         return service.create(form);
     }
 
