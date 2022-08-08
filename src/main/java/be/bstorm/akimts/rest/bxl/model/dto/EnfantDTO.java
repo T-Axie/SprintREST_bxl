@@ -1,6 +1,5 @@
 package be.bstorm.akimts.rest.bxl.model.dto;
 
-import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +18,5 @@ public class EnfantDTO {
     private String proprete;
     private List<String> allergies;
     private Set<TuteurDTO> tuteurs;
-
 
 }

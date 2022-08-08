@@ -70,7 +70,7 @@ public class EnfantMapper {
         entity.setNom(form.getNom());
         entity.setDateNaissance(form.getDateNaiss());
         entity.setPropre(form.isPropre());
-        entity.setAllergies(form.getAllergies());
+        entity.setAllergies( form.getAllergies().stream().map( String::trim ).toList() );
 
         return entity;
 

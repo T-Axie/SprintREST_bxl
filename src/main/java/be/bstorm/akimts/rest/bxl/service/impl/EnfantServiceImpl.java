@@ -1,6 +1,7 @@
 package be.bstorm.akimts.rest.bxl.service.impl;
 
 import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
+import be.bstorm.akimts.rest.bxl.exceptions.FormValidationException;
 import be.bstorm.akimts.rest.bxl.exceptions.InvalidReferenceException;
 import be.bstorm.akimts.rest.bxl.mapper.EnfantMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.EnfantDTO;
@@ -13,9 +14,12 @@ import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.EnfantService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -48,11 +52,27 @@ public class EnfantServiceImpl implements EnfantService {
         if( !repository.existsById(id) )
             throw new ElementNotFoundException(Enfant.class, id);
 
+        MultiValueMap<String, String> validationErrors = null;
+
+        if(toUpdate.getAllergies().stream()
+                .anyMatch( (allergie) -> allergie == null || allergie.isBlank() || allergie.isEmpty())) {
+            validationErrors = new LinkedMultiValueMap<>();
+            validationErrors.add("allergies", "certaines allergies sont invalides");
+        }
+
         Enfant enfant = mapper.toEntity(toUpdate);
         List<Tuteur> tuteurs = tuteurRepository.findAllById(toUpdate.getTuteursId());
+
+        if( tuteurs.size() < toUpdate.getTuteursId().size() ){
+            validationErrors = validationErrors == null ? new LinkedMultiValueMap<>() : validationErrors;
+            validationErrors.add("tuteurs", "certains id ne menent pas à un tuteur");
+        }
+
+        if( validationErrors != null )
+            throw new FormValidationException(validationErrors);
+
         enfant.setTuteurs( new HashSet<>(tuteurs) );
         enfant.setId(id);
-
         return mapper.toDto( repository.save( enfant ) );
     }
 
@@ -102,4 +122,13 @@ public class EnfantServiceImpl implements EnfantService {
         enfant.setTuteurs( new HashSet<>(tuteurs) );
         return mapper.toDto( repository.save(enfant) );
     }
+
+    @Override
+    public List<EnfantDTO> getAllWithAllergie(String allergie) {
+        return repository.findByAllergiesContaining(allergie).stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+
 }

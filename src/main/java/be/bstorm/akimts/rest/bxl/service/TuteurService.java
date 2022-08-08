@@ -12,4 +12,6 @@ public interface TuteurService extends CrudService<TuteurDTO, Long, TuteurForm, 
 
     Set<TuteurDTO> getAllById(Collection<Long> ids);
 
+    List<TuteurDTO> getAllFromVilleWithChild(String ville);
+
 }

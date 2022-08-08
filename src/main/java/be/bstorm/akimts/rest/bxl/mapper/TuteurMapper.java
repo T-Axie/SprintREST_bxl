@@ -1,5 +1,6 @@
 package be.bstorm.akimts.rest.bxl.mapper;
 
+import be.bstorm.akimts.rest.bxl.model.dto.AdresseDTO;
 import be.bstorm.akimts.rest.bxl.model.dto.TuteurDTO;
 import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
 import be.bstorm.akimts.rest.bxl.model.forms.TuteurForm;
@@ -23,7 +24,7 @@ public class TuteurMapper {
 
         return TuteurDTO.builder()
                 .id(entity.getId())
-                .adresse(entity.getAdresse())
+                .adresse(AdresseDTO.fromEntity(entity.getAdresse()))
                 .prenom(entity.getPrenom())
                 .nom(entity.getNom())
                 .numTel(entity.getNumTel())
@@ -38,7 +39,7 @@ public class TuteurMapper {
         Tuteur entity = new Tuteur();
         entity.setPrenom(form.getPrenom());
         entity.setNom(form.getNom());
-        entity.setAdresse(form.getAdresse());
+        entity.setAdresse(form.getAdresse().toEntity());
         entity.setNumTel(form.getNumTel());
         return entity;
     }

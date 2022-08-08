@@ -14,7 +14,7 @@ public class TuteurDTO {
     private Long id;
     private String prenom;
     private String nom;
-    private String adresse;
+    private AdresseDTO adresse;
     private String numTel;
     private Set<EnfantDTO> enfants;
 

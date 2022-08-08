@@ -6,9 +6,12 @@ import be.bstorm.akimts.rest.bxl.model.forms.EnfantInsertForm;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantUpdateForm;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface EnfantService extends CrudService<EnfantDTO, Long, EnfantInsertForm, EnfantUpdateForm> {
 
     EnfantDTO changeTuteurs(long id, Collection<Long> idTuteur);
+
+    List<EnfantDTO> getAllWithAllergie(String allergie);
 
 }

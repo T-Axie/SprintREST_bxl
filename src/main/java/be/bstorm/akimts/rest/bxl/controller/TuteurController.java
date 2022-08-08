@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class TuteurController {
     }
 
     @PostMapping
-    public TuteurDTO insert(@RequestBody TuteurForm form){
+    public TuteurDTO insert(@Valid @RequestBody TuteurForm form){
         return service.create(form);
     }
 
@@ -51,10 +52,15 @@ public class TuteurController {
     }
 
     @PutMapping("/{id}")
-    public TuteurDTO update(@PathVariable long id, @RequestBody TuteurForm form ){
+    public TuteurDTO update(@PathVariable long id, @Valid @RequestBody TuteurForm form ){
         return service.update(id, form);
     }
 
+
+    @GetMapping(params = "ville")
+    public List<TuteurDTO> getAllFromVille(@RequestParam String ville){
+        return service.getAllFromVilleWithChild(ville);
+    }
 
 
 }

@@ -58,13 +58,18 @@ public class EnfantController {
     }
 
     @PutMapping("/{id:[0-9]+}")
-    public EnfantDTO update(@PathVariable long id, @RequestBody EnfantUpdateForm form ){
+    public EnfantDTO update(@PathVariable long id, @Valid @RequestBody EnfantUpdateForm form ){
         return service.update(id, form);
     }
 
     @PatchMapping("/{id:[0-9]+}")
-    public EnfantDTO patchTuteurs(@PathVariable long id, @RequestBody Collection<Long> tuteurIds){
+    public EnfantDTO patchTuteurs(@PathVariable long id, @Valid @RequestBody Collection<Long> tuteurIds){
         return service.changeTuteurs(id, tuteurIds);
+    }
+
+    @GetMapping(value = "/allergie")
+    public List<EnfantDTO> getAllWithAllergie(@RequestParam String allergie){
+        return service.getAllWithAllergie(allergie);
     }
 
 
