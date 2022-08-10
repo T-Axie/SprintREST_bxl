@@ -1,39 +1,28 @@
 package be.bstorm.akimts.rest.bxl.controller;
 
-import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
-import be.bstorm.akimts.rest.bxl.mapper.EnfantMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.EnfantDTO;
-import be.bstorm.akimts.rest.bxl.model.dto.ErrorDTO;
-import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
-import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
+import be.bstorm.akimts.rest.bxl.model.dto.ReservationDTO;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantInsertForm;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantUpdateForm;
 import be.bstorm.akimts.rest.bxl.service.EnfantService;
-import be.bstorm.akimts.rest.bxl.service.TuteurService;
-import org.springframework.http.HttpMethod;
+import be.bstorm.akimts.rest.bxl.service.ReservationService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/enfant")
 public class EnfantController {
 
     private final EnfantService service;
-    private final EnfantMapper mapper;
-    private final TuteurService tuteurService;
+    private final ReservationService reservationService;
 
-    public EnfantController(EnfantService service, EnfantMapper mapper, TuteurService tuteurService) {
+    public EnfantController(EnfantService service, ReservationService reservationService) {
         this.service = service;
-        this.mapper = mapper;
-        this.tuteurService = tuteurService;
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/{id:[0-9]+}")
@@ -72,5 +61,9 @@ public class EnfantController {
         return service.getAllWithAllergie(allergie);
     }
 
+    @GetMapping("/{id:[0-9]+}/reservation/future")
+    public List<ReservationDTO> futureReservation(@PathVariable Long id){
+        return reservationService.futureReservOfChild(id);
+    }
 
 }

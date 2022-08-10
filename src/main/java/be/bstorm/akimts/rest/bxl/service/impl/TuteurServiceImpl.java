@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,13 +40,20 @@ public class TuteurServiceImpl implements TuteurService {
     public TuteurDTO create(TuteurForm toInsert) {
         Tuteur tuteur = mapper.toEntity(toInsert);
 
-        ExampleMatcher matcher = ExampleMatcher.matchingAll().withIgnoreCase();
-        adresseRepository.findAll( Example.of( tuteur.getAdresse(), matcher ) ).stream()
-                .findFirst()
-                .ifPresentOrElse(
-                        tuteur::setAdresse,
-                        () -> tuteur.setAdresse(adresseRepository.save(tuteur.getAdresse()))
-                );
+        // region alternative: via l'implementation custom
+        adresseRepository.exists(tuteur.getAdresse()).ifPresentOrElse(
+                tuteur::setAdresse,
+                () -> tuteur.setAdresse(adresseRepository.save(tuteur.getAdresse()))
+        );
+        // endregion
+
+//        ExampleMatcher matcher = ExampleMatcher.matchingAll().withIgnoreCase();
+//        adresseRepository.findAll( Example.of( tuteur.getAdresse(), matcher ) ).stream()
+//                .findFirst()
+//                .ifPresentOrElse(
+//                        tuteur::setAdresse,
+//                        () -> tuteur.setAdresse(adresseRepository.save(tuteur.getAdresse()))
+//                );
 
         return mapper.toDto( repository.save( tuteur ) );
     }
