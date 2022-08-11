@@ -37,6 +37,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     private TuteurRepository tuteurRepository;
 
+    public ReservationServiceImpl(ReservationRepository repository, ReservationMapper mapper, EnfantRepository enfantRepository, TuteurRepository tuteurRepository) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.enfantRepository = enfantRepository;
+        this.tuteurRepository = tuteurRepository;
+    }
+
     @Override
     public ReservationDTO requestReservation(@NonNull ReservationRequestForm form) {
 
@@ -127,7 +134,7 @@ public class ReservationServiceImpl implements ReservationService {
 //                59,
 //                59
 //        );
-//        return repository.findByArriveAfterAndAndDepartBefore(now, lastDayOfThisMonth).stream()
+//        return repository.findByArriveAfterAndDepartBeforeAndAnnuleFalse(now, lastDayOfThisMonth).stream()
 //                .map(mapper::toDto)
 //                .toList();
 

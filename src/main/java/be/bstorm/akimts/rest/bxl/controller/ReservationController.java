@@ -27,7 +27,7 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/check", params = {"arrival", "departure"})
-    public boolean checkAvailable(
+    public boolean checkAvailable( // 2020-10-10T00:00:00
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime arrival,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime departure
     ){

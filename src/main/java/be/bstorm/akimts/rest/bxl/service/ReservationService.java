@@ -15,4 +15,5 @@ public interface ReservationService {
     void cancelReservation(ReservationCancellationForm form);
     List<ReservationDTO> futureReservOfChild(Long childId);
     List<ReservationDTO> futureOfCurrentMonth();
+
 }

@@ -6,10 +6,12 @@ import be.bstorm.akimts.rest.bxl.model.forms.EnfantInsertForm;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantUpdateForm;
 import be.bstorm.akimts.rest.bxl.service.EnfantService;
 import be.bstorm.akimts.rest.bxl.service.ReservationService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -61,9 +63,15 @@ public class EnfantController {
         return service.getAllWithAllergie(allergie);
     }
 
+    // GET http://localhost:8080/enfant/{id}/reservation/future
     @GetMapping("/{id:[0-9]+}/reservation/future")
     public List<ReservationDTO> futureReservation(@PathVariable Long id){
         return reservationService.futureReservOfChild(id);
+    }
+
+    @GetMapping(value = "/on-day", params = "date")// 30-12-2020 : pattern= "dd-MM-yyyy"
+    public List<EnfantDTO> presentOnDay(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date){
+        return service.getAllPresentOnDay(date);
     }
 
 }

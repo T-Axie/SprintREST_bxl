@@ -6,10 +6,12 @@ import be.bstorm.akimts.rest.bxl.exceptions.InvalidReferenceException;
 import be.bstorm.akimts.rest.bxl.mapper.EnfantMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.EnfantDTO;
 import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
+import be.bstorm.akimts.rest.bxl.model.entities.Reservation;
 import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantInsertForm;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantUpdateForm;
 import be.bstorm.akimts.rest.bxl.repository.EnfantRepository;
+import be.bstorm.akimts.rest.bxl.repository.ReservationRepository;
 import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.EnfantService;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -28,11 +31,13 @@ public class EnfantServiceImpl implements EnfantService {
 
     private final EnfantRepository repository;
     private final TuteurRepository tuteurRepository;
+    private final ReservationRepository reservRepository;
     private final EnfantMapper mapper;
 
-    public EnfantServiceImpl(EnfantRepository repository, TuteurRepository tuteurRepository, EnfantMapper mapper) {
+    public EnfantServiceImpl(EnfantRepository repository, TuteurRepository tuteurRepository, ReservationRepository reservRepository, EnfantMapper mapper) {
         this.repository = repository;
         this.tuteurRepository = tuteurRepository;
+        this.reservRepository = reservRepository;
         this.mapper = mapper;
     }
 
@@ -130,5 +135,15 @@ public class EnfantServiceImpl implements EnfantService {
                 .toList();
     }
 
+    @Override
+    public List<EnfantDTO> getAllPresentOnDay(LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(23,59,59);
 
+        return reservRepository.findByArriveAfterAndDepartBeforeAndAnnuleFalse(startOfDay, endOfDay).stream()
+                .map( Reservation::getEnfant )
+                .map( mapper::toDto )
+                .distinct()
+                .toList();
+    }
 }
