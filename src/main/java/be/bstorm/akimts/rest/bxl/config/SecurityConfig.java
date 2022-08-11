@@ -6,7 +6,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -47,14 +54,18 @@ public class SecurityConfig {
 
         http.httpBasic();
 
+        http.csrf().disable();
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        // A ecrire du plus spécifique au plus général
         http.authorizeRequests()
+                // region demo security
                 .antMatchers("/security/test/????").authenticated()
                 .antMatchers("/security/test/nobody").denyAll()
                 .antMatchers("/security/test/connected").authenticated()
                 .antMatchers("/security/test/not-connected").anonymous()
-                .antMatchers("/security/test/role/user").hasRole("USER")
+                .antMatchers("/security/test/role/user").hasRole("PERSONNEL")
                 .antMatchers("/security/test/role/admin").hasRole("ADMIN")
                 .antMatchers("/security/test/role/any").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/security/test/authority/READ").hasAuthority("ROLE_USER")
@@ -65,10 +76,37 @@ public class SecurityConfig {
                 // - * : joker pour un segment de 0 à N caractères
                 // - **: joker pour de 0 à N segments
                 // - {pathVar:regex}: pattern regex pour un segment
-                .anyRequest().permitAll();
+                // endregion
+                .antMatchers("/reserv/check").permitAll()
+                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                .antMatchers("/user/register").anonymous()
+                .anyRequest().authenticated();
 
         return http.build();
 
     }
+
+    @Bean
+    public PasswordEncoder encoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+//    @Bean
+//    public UserDetailsService userDetailsService(PasswordEncoder encoder){
+//        return new InMemoryUserDetailsManager(
+//                List.of(
+//                        User.builder()
+//                                .username("user")
+//                                .password(encoder.encode("pass"))
+//                                .roles("PERSONNEL")
+//                                .build(),
+//                        User.builder()
+//                                .username("admin")
+//                                .password(encoder.encode("pass"))
+//                                .roles("ADMIN")
+//                                .build()
+//                )
+//        );
+//    }
 
 }
