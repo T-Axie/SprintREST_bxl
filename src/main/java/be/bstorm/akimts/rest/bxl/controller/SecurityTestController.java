@@ -1,13 +1,20 @@
 package be.bstorm.akimts.rest.bxl.controller;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/security/test")
 public class SecurityTestController {
 
+    @PreAuthorize("permitAll()") // se fait avant la méthode
+    @PostAuthorize("returnObject.startsWith('o')") // se fait après la méthode
     @GetMapping("/all")
     public String allAccess(){
         return "ok";
@@ -28,6 +35,7 @@ public class SecurityTestController {
         return "ok";
     }
 
+    @Secured("ROLE_USER") // seulement pour les authorities
     @GetMapping("/role/user")
     public String roleUser(){
         return "ok";
@@ -38,6 +46,8 @@ public class SecurityTestController {
         return "ok";
     }
 
+//    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/role/any")
     public String isAdminOrUser(){
         return "ok";

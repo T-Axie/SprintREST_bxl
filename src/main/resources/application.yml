@@ -18,6 +18,12 @@ spring:
     hibernate:
       ddl-auto: create
 
+application:
+  jwt:
+    expiresAt: 846000
+    headerPrefix: "Bearer "
+    secret: "Y2nr@Svs1#Rume@v9^r$$hwTm563QpxLfdDTO$VdLLMnNRJmcQ"
+    headerKey: "Authorization"
 
 custom:
   property: "ma prop custom"
