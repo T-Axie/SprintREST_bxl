@@ -1,6 +1,5 @@
 package be.bstorm.akimts.rest.bxl.validation.validator;
 
-import be.bstorm.akimts.rest.bxl.model.entities.Reservation;
 import be.bstorm.akimts.rest.bxl.model.forms.ReservationRequestForm;
 import be.bstorm.akimts.rest.bxl.validation.constraint.ReservationValid;
 

@@ -3,7 +3,6 @@ package be.bstorm.akimts.rest.bxl.model.dto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

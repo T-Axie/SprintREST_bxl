@@ -54,7 +54,7 @@ public class JwtProvider {
 
     public boolean validate(String token) {
         try{
-            DecodedJWT decodedJWT = JWT.require( Algorithm.HMAC512(properties.getSecret()) )
+            /* DecodedJWT decodedJWT = */ JWT.require( Algorithm.HMAC512(properties.getSecret()) )
                     .acceptExpiresAt(properties.getExpiresAt())
                     .build().verify(token);
 

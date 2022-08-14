@@ -6,9 +6,6 @@ import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantInsertForm;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantUpdateForm;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

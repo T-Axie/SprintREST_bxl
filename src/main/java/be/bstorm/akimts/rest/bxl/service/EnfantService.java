@@ -1,7 +1,6 @@
 package be.bstorm.akimts.rest.bxl.service;
 
 import be.bstorm.akimts.rest.bxl.model.dto.EnfantDTO;
-import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantInsertForm;
 import be.bstorm.akimts.rest.bxl.model.forms.EnfantUpdateForm;
 

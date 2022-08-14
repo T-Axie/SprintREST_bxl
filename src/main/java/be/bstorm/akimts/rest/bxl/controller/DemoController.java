@@ -2,7 +2,6 @@ package be.bstorm.akimts.rest.bxl.controller;
 
 import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.model.entities.Personne;
-import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,9 +75,7 @@ public class DemoController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("artificial", "ma valeur");
 
-        HttpStatus status = HttpStatus.OK;
-
-//        return new ResponseEntity<>(body, headers, status);
+        //        return new ResponseEntity<>(body, headers, status);
         return ResponseEntity.status(HttpStatus.OK)
                 .header("arbitrary", "1e valeur", "2e valeur")
                 .headers( headers )

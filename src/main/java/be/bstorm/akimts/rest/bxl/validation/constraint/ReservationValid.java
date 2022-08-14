@@ -1,7 +1,6 @@
 package be.bstorm.akimts.rest.bxl.validation.constraint;
 
 import be.bstorm.akimts.rest.bxl.validation.validator.ReservationValidator;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

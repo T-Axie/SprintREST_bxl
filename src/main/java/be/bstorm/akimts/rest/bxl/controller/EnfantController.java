@@ -8,7 +8,6 @@ import be.bstorm.akimts.rest.bxl.service.EnfantService;
 import be.bstorm.akimts.rest.bxl.service.ReservationService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

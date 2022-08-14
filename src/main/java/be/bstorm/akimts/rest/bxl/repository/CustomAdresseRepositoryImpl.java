@@ -1,8 +1,6 @@
 package be.bstorm.akimts.rest.bxl.repository;
 
 import be.bstorm.akimts.rest.bxl.model.entities.Adresse;
-import lombok.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

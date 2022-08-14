@@ -4,7 +4,6 @@ import be.bstorm.akimts.rest.bxl.exceptions.ElementNotFoundException;
 import be.bstorm.akimts.rest.bxl.exceptions.ReferencedSuppresionException;
 import be.bstorm.akimts.rest.bxl.mapper.TuteurMapper;
 import be.bstorm.akimts.rest.bxl.model.dto.TuteurDTO;
-import be.bstorm.akimts.rest.bxl.model.entities.Adresse;
 import be.bstorm.akimts.rest.bxl.model.entities.Enfant;
 import be.bstorm.akimts.rest.bxl.model.entities.Personne;
 import be.bstorm.akimts.rest.bxl.model.entities.Tuteur;
@@ -13,13 +12,10 @@ import be.bstorm.akimts.rest.bxl.repository.AdresseRepository;
 import be.bstorm.akimts.rest.bxl.repository.TuteurRepository;
 import be.bstorm.akimts.rest.bxl.service.TuteurService;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
