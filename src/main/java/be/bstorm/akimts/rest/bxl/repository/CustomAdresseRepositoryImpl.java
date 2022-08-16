@@ -17,16 +17,7 @@ public class CustomAdresseRepositoryImpl implements CustomAdresseRepository {
     @Override
     public Optional<Adresse> exists(Adresse adresse) {
         String request =
-                    """
-                    SELECT a
-                    FROM Adresse a
-                    WHERE
-                      a.ville = ?1 AND
-                      a.codePostal = ?2 AND
-                      a.rue = ?3 AND
-                      a.numero = ?4 AND
-                      a.boite = ?5
-                    """;
+                "SELECT a FROM Adresse a WHERE a.ville = ?1 AND a.codePostal = ?2 AND a.rue = ?3 AND a.numero = ?4 AND a.boite = ?5";
 
         TypedQuery<Adresse> query = entityManager.createQuery(request, Adresse.class);
         query.setParameter(1, adresse.getVille());
