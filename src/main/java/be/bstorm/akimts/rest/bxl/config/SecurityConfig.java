@@ -82,7 +82,7 @@ public class SecurityConfig/* extends WebSecurityConfigurerAdapter  (deprecié d
                 .antMatchers("/reserv/check").permitAll()
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                 .antMatchers("/user/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
         return http.build();
 
