@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/garderie_db
     username: postgres
-    password: pass
+    password: 1234
     driver-class-name: org.postgresql.Driver
   security:
     user:
