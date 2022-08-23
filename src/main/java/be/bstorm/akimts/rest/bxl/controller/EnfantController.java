@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/enfant")
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin("http://localhost:4200")
 public class EnfantController {
 
     private final EnfantService service;
