@@ -56,6 +56,7 @@ public class SecurityConfig/* extends WebSecurityConfigurerAdapter  (deprecié d
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter authFilter) throws Exception {
 
         http.csrf().disable();
+        http.cors().disable();
 
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
